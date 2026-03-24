@@ -22,7 +22,7 @@ func RootHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(data)
 }
 
-func UloadHandler(w http.ResponseWriter, r *http.Request) {
+func UploadHandler(w http.ResponseWriter, r *http.Request) {
 	file, header, err := r.FormFile("upload")
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)

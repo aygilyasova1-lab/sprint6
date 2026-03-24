@@ -3,7 +3,6 @@ package main
 import (
 	"os"
 	"log"
-	"net/http"
 	server "github.com/Yandex-Practicum/go1fl-sprint6-final/internal/server"
 )
 

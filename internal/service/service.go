@@ -1,6 +1,5 @@
 package service
 import (
-	"fmt"
 	"strings"
 	morse "github.com/Yandex-Practicum/go1fl-sprint6-final/pkg/morse"
 	"errors"
