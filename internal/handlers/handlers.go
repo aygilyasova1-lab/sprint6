@@ -27,8 +27,6 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 	var data []byte
 	var fileName string
 
-	file, header, err := r.FormFile("upload")
-
 	contentType := r.Header.Get("Content-Type")
 	if strings.Contains(contentType, "multipart/form-data") {
 		file, header, err := r.FormFile("upload")
