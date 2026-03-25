@@ -43,7 +43,7 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "ошибка при чтении файла", http.StatusInternalServerError)
 		return
  		}
-   	fileName = "body_" time.Now().UTC().Format("20060102_150405") + filepath.Ext(header.Filename)
+   	fileName = "body_" + time.Now().UTC().Format("20060102_150405") + filepath.Ext(header.Filename)
 	}
 	
  	message := string(data)
