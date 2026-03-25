@@ -30,29 +30,38 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 	contentType := r.Header.Get("Content-Type")
 	if strings.Contains(contentType, "multipart/form-data") {
 		file, header, err := r.FormFile("upload")
-  		if err != nil {
-  			http.Error(w, "ошибка чтения файла", http.StatusInternalServerError)
-   			return
-  			}
-  		defer file.Close()
+  		if err == nil && file != nil {
+  			defer file.Close()
 
-  		data, err = io.ReadAll(file)
-  		if err != nil {
-  			http.Error(w, "ошибка чтения файла", http.StatusInternalServerError)
-   			return
-  			}
-		fileName = time.Now().UTC().Format("20060102_150405") + filepath.Ext(header.Filename)
+  			data, err = io.ReadAll(file)
+  			if err != nil {
+  				http.Error(w, "ошибка чтения файла", http.StatusInternalServerError)
+   				return
+  				}
+			fileName = time.Now().UTC().Format("20060102_150405") + filepath.Ext(header.Filename)
+
+		} else {
+			var err error
+			data, err = io.ReadAll(r.Body)
+			if err != nil {
+				http.Error(w, "ошибка чтения тела запроса", http.StatusInternalServerError)
+				return
+  				}
+
+			fileName = "body_" + time.Now().UTC().Format("20060102_150405") + ".txt"
+ 			}
 
 	} else {
-	var err error
-	data, err = io.ReadAll(r.Body)
-	if err != nil {
-		http.Error(w, "ошибка чтения тела запроса", http.StatusInternalServerError)
-		return
-  		}
+		var err error
+			data, err = io.ReadAll(r.Body)
+			if err != nil {
+				http.Error(w, "ошибка чтения тела запроса", http.StatusInternalServerError)
+				return
+  				}
 
-	fileName = "body_" + time.Now().UTC().Format("20060102_150405") + ".txt"
- 	}
+			fileName = "body_" + time.Now().UTC().Format("20060102_150405") + ".txt"
+ 			}
+	}		
 	
  	message := string(data)
 
