@@ -24,6 +24,7 @@ func RootHandler(w http.ResponseWriter, r *http.Request) {
 
 func UploadHandler(w http.ResponseWriter, r *http.Request) {
 	file, header, err := r.FormFile("upload")
+	var data []byte
 	if err == nil {
 		defer file.Close()
 		data, err = io.ReadAll(file)
