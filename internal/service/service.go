@@ -10,7 +10,7 @@ func TextDetector(message string) (string, error) {
 	if message == "" {
 		return "", emptyMessageError
 	}
-	if strings.ContainsAny(message, "qwertyuiopasdfghjklzxcvbnm1234567890QWERTYUIOPASDFGHJKLZXCVBNM") {
+	if strings.ContainsAny(message, "qwertyuiopasdfghjklzxcvbnm1234567890QWERTYUIOPASDFGHJKLZXCVBNMЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮйцукенгшщзхъфывапролджэячсмитьбю") {
 		finishText = morse.ToMorse(message)
 	} else {
 		finishText = morse.ToText(message)
