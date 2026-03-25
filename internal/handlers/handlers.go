@@ -45,7 +45,7 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fileName := time.Now().UTC().String() + filepath.Ext(header.Filename)
+	fileName := time.Now().UTC().Format("20060102_150405") + filepath.Ext(header.Filename)
 
 	localFile, err := os.Create(fileName)
 	if err != nil {
