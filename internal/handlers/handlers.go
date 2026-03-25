@@ -7,7 +7,6 @@ import (
 	"path/filepath"
 	"time"
 	service "github.com/Yandex-Practicum/go1fl-sprint6-final/internal/service"
-	"strings"
 )
 
 func RootHandler(w http.ResponseWriter, r *http.Request) {
@@ -26,7 +25,6 @@ func RootHandler(w http.ResponseWriter, r *http.Request) {
 func UploadHandler(w http.ResponseWriter, r *http.Request) {
 	var data []byte
 	var fileName string
-	contentType := r.Header.Get("Content-Type")
 
 	file, header, err := r.FormFile("upload")
  	if err == nil {
