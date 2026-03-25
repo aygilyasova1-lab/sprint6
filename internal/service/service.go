@@ -7,10 +7,17 @@ import (
 var emptyMessageError = errors.New("нет текста")
 func TextDetector(message string) (string, error) {
 	var finishText string
+	var isMorse bool
 	if message == "" {
 		return "", emptyMessageError
 	}
-	if strings.ContainsAny(message, "qwertyuiopasdfghjklzxcvbnm1234567890QWERTYUIOPASDFGHJKLZXCVBNMЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮйцукенгшщзхъфывапролджэячсмитьбю") {
+	for _, r := range message {
+    if r != '.' && r != '-' && r != ' ' {
+        isMorse = false
+        break
+    	}
+	}
+	if isMorse == false {
 		finishText = morse.ToMorse(message)
 	} else {
 		finishText = morse.ToText(message)
