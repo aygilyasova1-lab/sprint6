@@ -38,7 +38,11 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
   				http.Error(w, "ошибка чтения файла", http.StatusInternalServerError)
    				return
   				}
-			fileName = time.Now().UTC().Format("20060102_150405") + filepath.Ext(header.Filename)
+			ext := filepath.Ext(header.Filename)
+			if ext == "" {
+				ext = ".txt"
+			}
+			fileName = time.Now().UTC().Format("20060102_150405") + ext
 
 		} else {
 			var err error
@@ -63,6 +67,10 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
  			}	
 	
  	message := string(data)
+	if strings.TrimSpace(message) == "" {
+		http.Error(w, "нет данных для обработки", http.StatusInternalServerError)
+		return
+	}
 
 	result, err := service.TextDetector(message)
  	if err != nil {
