@@ -42,9 +42,7 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 	message := string(data)
 	result, err := service.TextDetector(message)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte("ошибка конвертации данных"))
-		return
+		result = message
 	}
 
 	fileName := time.Now().UTC().Format("20060102_150405") + filepath.Ext(header.Filename)
@@ -55,6 +53,8 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("ошибка создания файла"))
 		return
 	}
+	w.Header(). Set("Content-Type", "text/plain")
+	w.Write([]byte(result))
 
 	defer localFile.Close()
 
