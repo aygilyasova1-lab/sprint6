@@ -65,12 +65,6 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
 
 			fileName = "body_" + time.Now().UTC().Format("20060102_150405") + ".txt"
  			}	
-	
- 	message := string(data)
-	if strings.TrimSpace(message) == "" {
-		http.Error(w, "нет данных для обработки", http.StatusInternalServerError)
-		return
-	}
 
 	result, err := service.TextDetector(message)
  	if err != nil {
