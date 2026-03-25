@@ -24,19 +24,20 @@ func RootHandler(w http.ResponseWriter, r *http.Request) {
 
 func UploadHandler(w http.ResponseWriter, r *http.Request) {
 	file, header, err := r.FormFile("upload")
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte("ошибка парсинга"))
-		return 
-	}
-
-	defer file.Close()
-	data, err := io.ReadAll(file)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte("ошибка при чтении файла"))
-		return
-	} 
+	if err == nil {
+		defer file.Close()
+		data, err = io.ReadAll(file)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+		    w.Write([]byte("ошибка  при чтении файла"))
+		}
+		} else {
+		data, err = io.ReadAll(r.Body)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("ошибка при чтении запроса"))
+			} 
+		}
 	message := string(data)
 	result, err := service.TextDetector(message)
 	if err != nil {
