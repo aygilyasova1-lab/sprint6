@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"net/http"
-	"strings"
 	"os"
 	"io"
 	"path/filepath"
@@ -39,6 +38,19 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
         http.Error(w, "ошибка обработки", http.StatusInternalServerError)
         return
     }
+
+	localFile, err := os.Create(fileName)
+	if err != nil {
+		http.Error(w, "ошибка создания файла", http.StatusInternalServerError)
+    	return
+		}
+
+  	defer localFile.Close()
+	_, err = localFile.Write([]byte(result))
+ 	if err != nil {
+		http.Error(w, "ошибка при записи данных", http.StatusInternalServerError)
+		return
+		}
 
     w.Header().Set("Content-Type", "text/plain")
     w.Write([]byte(result))
