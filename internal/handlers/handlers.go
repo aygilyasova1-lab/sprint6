@@ -50,8 +50,8 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
                 if err != nil {
                     http.Error(w, "ошибка чтения файла", http.StatusInternalServerError)
                     return
+				}	
 				fileName = time.Now().UTC().Format("20060102_150405") +  filepath.Ext(header.Filename)
-                }
                 break
             }
 
