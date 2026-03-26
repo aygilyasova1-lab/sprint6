@@ -6,6 +6,7 @@ import (
 	"io"
 	"path/filepath"
 	"time"
+	"strings"
 	service "github.com/Yandex-Practicum/go1fl-sprint6-final/internal/service"
 )
 
@@ -25,10 +26,44 @@ func RootHandler(w http.ResponseWriter, r *http.Request) {
 func UploadHandler(w http.ResponseWriter, r *http.Request) {
     defer r.Body.Close()
 
-    data, err := io.ReadAll(r.Body)
-    if err != nil {
-        http.Error(w, "ошибка чтения", http.StatusInternalServerError)
-        return
+    var data []byte
+
+    contentType := r.Header.Get("Content-Type")
+
+    if strings.Contains(contentType, "multipart/form-data") {
+        err := r.ParseMultipartForm(10 << 20)
+        if err != nil {
+            http.Error(w, "ошибка парсинга формы", http.StatusInternalServerError)
+            return
+        }
+
+        for _, files := range r.MultipartForm.File {
+            for _, header := range files {
+                file, err := header.Open()
+                if err != nil {
+                    continue
+                }
+                defer file.Close()
+
+                data, err = io.ReadAll(file)
+                if err != nil {
+                    http.Error(w, "ошибка чтения файла", http.StatusInternalServerError)
+                    return
+                }
+                break
+            }
+            if data != nil {
+                break
+            }
+        }
+
+    } else {
+        var err error
+        data, err = io.ReadAll(r.Body)
+        if err != nil {
+            http.Error(w, "ошибка чтения тела", http.StatusInternalServerError)
+            return
+        }
     }
 
     message := string(data)
@@ -37,20 +72,22 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
     if err != nil {
         http.Error(w, "ошибка обработки", http.StatusInternalServerError)
         return
+	}
+
+    fileName := time.Now().UTC().Format("20060102_150405") + ".txt"
+
+    file, err := os.Create(fileName)
+    if err != nil {
+        http.Error(w, "ошибка создания файла", http.StatusInternalServerError)
+        return
     }
+    defer file.Close()
 
-	localFile, err := os.Create(fileName)
-	if err != nil {
-		http.Error(w, "ошибка создания файла", http.StatusInternalServerError)
-    	return
-		}
-
-  	defer localFile.Close()
-	_, err = localFile.Write([]byte(result))
- 	if err != nil {
-		http.Error(w, "ошибка при записи данных", http.StatusInternalServerError)
-		return
-		}
+    _, err = file.Write([]byte(result))
+    if err != nil {
+        http.Error(w, "ошибка записи файла", http.StatusInternalServerError)
+        return
+    }
 
     w.Header().Set("Content-Type", "text/plain")
     w.Write([]byte(result))
