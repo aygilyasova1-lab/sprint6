@@ -1,5 +1,19 @@
 package main
 
+import (
+	"os"
+	"log"
+	server "github.com/Yandex-Practicum/go1fl-sprint6-final/internal/server"
+)
+
 func main() {
+	morseLogger := log.New(os.Stdout, "server: ", log.LstdFlags)
+
+	morseServer := server.NewServer(morseLogger)
+
+	err := morseServer.HTTP.ListenAndServe()
+	if err != nil {
+		morseLogger.Fatal(err)
+	}
 
 }

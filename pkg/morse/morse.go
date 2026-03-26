@@ -192,7 +192,6 @@ func (c Converter) ToText(morse string) string {
 
 	return string(out)
 }
-
 // ConverterOption is a function that modifies a Converter.
 // The main use of ConvertOption is inside NewConverter.
 type ConverterOption func(Converter) Converter
