@@ -6,7 +6,7 @@ import (
 var emptyMessageError = errors.New("нет текста")
 func TextDetector(message string) (string, error) {
 	var finishText string
-	var isMorse bool
+	isMorse := true
 	if message == "" {
 		return "", emptyMessageError
 	}
