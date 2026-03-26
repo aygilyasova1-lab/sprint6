@@ -15,7 +15,7 @@ func RootHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte("ошибка при чтении файла"))
+		w.Write([]byte("ошибка чтения файла"))
 		return
 	}
 
