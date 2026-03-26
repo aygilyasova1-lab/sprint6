@@ -26,6 +26,7 @@ func RootHandler(w http.ResponseWriter, r *http.Request) {
 func UploadHandler(w http.ResponseWriter, r *http.Request) {
     defer r.Body.Close()
 
+	var fileName string
     var data []byte
 
     contentType := r.Header.Get("Content-Type")
@@ -49,9 +50,11 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
                 if err != nil {
                     http.Error(w, "ошибка чтения файла", http.StatusInternalServerError)
                     return
+				fileName = time.Now().UTC().Format("20060102_150405") +  filepath.Ext(header.Filename)
                 }
                 break
             }
+
             if data != nil {
                 break
             }
@@ -64,6 +67,7 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
             http.Error(w, "ошибка чтения тела", http.StatusInternalServerError)
             return
         }
+		fileName = time.Now().UTC().Format("20060102_150405") +  ".txt"
     }
 
     message := string(data)
@@ -73,8 +77,6 @@ func UploadHandler(w http.ResponseWriter, r *http.Request) {
         http.Error(w, "ошибка обработки", http.StatusInternalServerError)
         return
 	}
-
-    fileName := time.Now().UTC().Format("20060102_150405") +  filepath.Ext(header.Filename)
 
     file, err := os.Create(fileName)
     if err != nil {
